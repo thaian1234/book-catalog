@@ -9,8 +9,8 @@
   "importOrder": [
     "<THIRD_PARTY_MODULES>",
     "^@/config(.*)$",
-    "^@/lib(.*)$",
     "^@/db(.*)$",
+    "^@/lib(.*)$",
     "^@/actions(.*)$",
     "^@/services(.*)$",
     "^@/components(.*)$",

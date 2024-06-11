@@ -2,6 +2,10 @@ import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 
 import { db } from "@/config/firebase";
 
+import { Button } from "@/components/ui/button";
+
+import { AddPostForm } from "./_components/add-post-form";
+
 type Post = {
   id: string;
   title: string;
@@ -32,14 +36,18 @@ const getPostById = async (id: string) => {
 
 export default async function HomePage() {
   const posts = await getPosts();
-  const postId = await getPostById(posts[0].id);
 
-  console.log(postId);
+  console.log(posts);
   return (
     <div>
-      {posts.map((post) => (
-        <div key={post.id}>{post.title}</div>
-      ))}
+      <div>
+        {posts.map((post) => (
+          <div key={post.id}>{post.title}</div>
+        ))}
+      </div>
+      <div className="max-w-xl">
+        <AddPostForm />
+      </div>
     </div>
   );
 }
