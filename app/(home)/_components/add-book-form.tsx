@@ -31,7 +31,7 @@ export function AddBookForm() {
     defaultValues: {
       isbn: "",
       name: "",
-      publicationYear: new Date(),
+      publicationYear: undefined,
       rating: 0,
       authors: [],
     },
@@ -70,7 +70,7 @@ export function AddBookForm() {
               <FormLabel>Publication Year</FormLabel>
               <FormControl>
                 <DateTimePicker
-                  jsDate={field.value}
+                  jsDate={field.value?.toDate()}
                   onJsDateChange={field.onChange}
                 />
               </FormControl>

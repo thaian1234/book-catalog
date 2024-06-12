@@ -1,18 +1,15 @@
-import { getAllBooks } from "@/services/book-services";
+import { Suspense } from "react";
+
+import { BookCatalog } from "@/components/book-catalog";
 
 import { AddBookForm } from "./_components/add-book-form";
 
-export default async function HomePage() {
-  const books = await getAllBooks();
-
-  console.log(books);
+export default function HomePage() {
   return (
     <div>
-      <div>
-        {books.map((book) => (
-          <div key={book.id}>{book.name}</div>
-        ))}
-      </div>
+      <Suspense fallback={<p>Loading books...</p>}>
+        <BookCatalog />
+      </Suspense>
       <div className="max-w-xl">
         <AddBookForm />
         {/* <AddPostForm /> */}
