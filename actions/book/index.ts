@@ -4,3 +4,5 @@ export {
   addBookSchema,
   updateBookSchema,
 } from "./schema";
+
+export { addBookAction, updateBookAction } from "./action";

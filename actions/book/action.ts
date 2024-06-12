@@ -6,7 +6,9 @@ import { createServerAction } from "zsa";
 
 import { db } from "@/config/firebase";
 
-import { addBookSchema, updateBookSchema } from "./schema";
+import { converter } from "@/lib/converter";
+
+import { AddBookType, addBookSchema, updateBookSchema } from "./schema";
 
 export const addBookAction = createServerAction()
   .input(addBookSchema)
@@ -17,10 +19,12 @@ export const addBookAction = createServerAction()
       throw "Missing some fields";
     }
 
-    const data = validatedFields.data;
-    const collectionRef = collection(db, "books");
+    const values = validatedFields.data;
 
-    await addDoc(collectionRef, data).catch(() => {
+    const collectionRef = collection(db, "books").withConverter(
+      converter<AddBookType>(),
+    );
+    await addDoc(collectionRef, values).catch(() => {
       throw "Failed to add book";
     });
 

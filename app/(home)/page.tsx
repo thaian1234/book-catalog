@@ -1,12 +1,6 @@
-import { collection, doc, getDoc, getDocs } from "firebase/firestore";
-
-import { db } from "@/config/firebase";
-
 import { getAllBooks } from "@/services/book-services";
 
-import { Button } from "@/components/ui/button";
-
-import { AddPostForm } from "./_components/add-post-form";
+import { AddBookForm } from "./_components/add-book-form";
 
 export default async function HomePage() {
   const books = await getAllBooks();
@@ -20,7 +14,8 @@ export default async function HomePage() {
         ))}
       </div>
       <div className="max-w-xl">
-        <AddPostForm />
+        <AddBookForm />
+        {/* <AddPostForm /> */}
       </div>
     </div>
   );
