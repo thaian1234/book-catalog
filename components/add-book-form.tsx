@@ -20,6 +20,8 @@ import {
 import { Input } from "@/components/ui/input";
 import MultipleSelector, { Option } from "@/components/ui/multiple-selector";
 
+import { useAddBookStore } from "@/hooks/use-add-book";
+
 const OPTIONS: Option[] = [
   { label: "nextjs", value: "Nextjs" },
   { label: "Thai An", value: "Thai An" },
@@ -36,9 +38,12 @@ export function AddBookForm() {
       authors: [],
     },
   });
+  const { onClose } = useAddBookStore();
   const { execute, isPending } = useServerAction(addBookAction, {
     onError(args) {
       toast.error(args.err.message);
+      onClose();
+      form.reset();
     },
     onSuccess() {
       toast.success("Book created");
@@ -70,7 +75,7 @@ export function AddBookForm() {
               <FormLabel>Publication Year</FormLabel>
               <FormControl>
                 <DateTimePicker
-                  jsDate={field.value?.toDate()}
+                  jsDate={field.value}
                   onJsDateChange={field.onChange}
                 />
               </FormControl>

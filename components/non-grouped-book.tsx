@@ -1,12 +1,8 @@
-import { BookA } from "lucide-react";
-import Image from "next/image";
-
 import { getBooksWithoutYear } from "@/services/book-services";
 
+import { Book } from "@/components/book";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
-import { Book } from "./book";
-import { ScrollArea } from "./ui/scroll-area";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export async function NonGroupedBook() {
   const booksWithoutYear = await getBooksWithoutYear();
