@@ -1,8 +1,10 @@
 export {
   type AddBookType,
   type UpdateBookType,
+  type DeleteBookType,
   addBookSchema,
   updateBookSchema,
+  deleteBookSchema,
 } from "./schema";
 
-export { addBookAction, updateBookAction } from "./action";
+export { addBookAction, updateBookAction, deleteBookById } from "./action";

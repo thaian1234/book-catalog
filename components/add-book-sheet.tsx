@@ -1,6 +1,6 @@
 "use client";
 
-import { AddBookForm } from "@/components/add-book-form";
+import { BookForm } from "@/components/book-form";
 import {
   Sheet,
   SheetContent,
@@ -30,10 +30,10 @@ export function AddBookSheet({ children }: AddBookSheetProps) {
       </div>
       <SheetContent className="space-y-4">
         <SheetHeader>
-          <SheetTitle>Add Book</SheetTitle>
+          <SheetTitle className="text-2xl">Add Book</SheetTitle>
           <SheetDescription>Create new book.</SheetDescription>
         </SheetHeader>
-        <AddBookForm />
+        <BookForm mode="create" />
       </SheetContent>
     </Sheet>
   );

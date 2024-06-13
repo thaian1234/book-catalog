@@ -5,7 +5,12 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { useServerAction } from "zsa-react";
 
-import { AddBookType, addBookAction, addBookSchema } from "@/actions/book";
+import {
+  AddBookType,
+  addBookAction,
+  addBookSchema,
+  updateBookAction,
+} from "@/actions/book";
 
 import { Button } from "@/components/ui/button";
 import { DateTimePicker } from "@/components/ui/datetime-picker";
@@ -21,38 +26,53 @@ import { Input } from "@/components/ui/input";
 import MultipleSelector, { Option } from "@/components/ui/multiple-selector";
 
 import { useAddBookStore } from "@/hooks/use-add-book";
+import { Book } from "@/types";
+
+interface BookFormProps {
+  book?: Book;
+  mode: "create" | "update";
+}
 
 const OPTIONS: Option[] = [
   { label: "nextjs", value: "Nextjs" },
   { label: "Thai An", value: "Thai An" },
 ];
 
-export function AddBookForm() {
+export function BookForm({ book, mode = "create" }: BookFormProps) {
   const form = useForm<AddBookType>({
     resolver: zodResolver(addBookSchema),
     defaultValues: {
-      isbn: "",
-      name: "",
-      publicationYear: undefined,
-      rating: 0,
-      authors: [],
+      authors: book?.authors,
+      isbn: book?.isbn,
+      name: book?.name,
+      rating: book?.rating,
     },
   });
   const { onClose } = useAddBookStore();
-  const { execute, isPending } = useServerAction(addBookAction, {
+
+  const isCreateMode = mode === "create" && !book;
+
+  const successMsg = isCreateMode ? "Book created" : "Book updated";
+  const action = isCreateMode
+    ? addBookAction
+    : updateBookAction.bind(null, {
+        id: book?.id || "",
+      });
+
+  const { execute, isPending } = useServerAction(action, {
     onError(args) {
       toast.error(args.err.message);
-      onClose();
-      form.reset();
     },
     onSuccess() {
-      toast.success("Book created");
+      toast.success(successMsg);
+      onClose();
+      form.reset();
     },
   });
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(execute)}>
+      <form onSubmit={form.handleSubmit(execute)} className="space-y-4">
         <FormField
           control={form.control}
           name="name"
@@ -118,7 +138,7 @@ export function AddBookForm() {
           name="authors"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>ISBN</FormLabel>
+              <FormLabel>Select authors</FormLabel>
               <FormControl>
                 <MultipleSelector
                   defaultOptions={OPTIONS}

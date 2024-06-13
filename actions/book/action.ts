@@ -1,11 +1,10 @@
 "use server";
 
 import {
-  Timestamp,
   addDoc,
   collection,
+  deleteDoc,
   doc,
-  setDoc,
   updateDoc,
 } from "firebase/firestore";
 import { revalidatePath } from "next/cache";
@@ -15,7 +14,12 @@ import { db } from "@/config/firebase";
 
 import { converter } from "@/lib/converter";
 
-import { AddBookType, addBookSchema, updateBookSchema } from "./schema";
+import {
+  AddBookType,
+  addBookSchema,
+  deleteBookSchema,
+  updateBookSchema,
+} from "./schema";
 
 export const addBookAction = createServerAction()
   .input(addBookSchema)
@@ -52,6 +56,25 @@ export const updateBookAction = createServerAction()
 
     await updateDoc(bookRef, values).catch(() => {
       throw "Failed to update book";
+    });
+
+    revalidatePath("/");
+  });
+
+export const deleteBookById = createServerAction()
+  .input(deleteBookSchema)
+  .handler(async ({ input }) => {
+    const validatedFields = deleteBookSchema.safeParse(input);
+
+    if (validatedFields.error) {
+      throw "Missing some fields";
+    }
+
+    const { id } = validatedFields.data;
+    const bookRef = doc(db, "books", id);
+
+    await deleteDoc(bookRef).catch(() => {
+      throw "Failed to delete book";
     });
 
     revalidatePath("/");

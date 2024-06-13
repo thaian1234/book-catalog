@@ -32,13 +32,18 @@ export async function getAllBooks() {
   return books;
 }
 
-export async function getBookById(id: string) {
-  const collectionRef = doc(db, "books", id).withConverter(converter<Book>());
-  const docRef = await getDoc(collectionRef);
+export async function getBookById(bookId: string) {
+  const bookRef = doc(db, "books", bookId).withConverter(converter<Book>());
+  const snapshot = await getDoc(bookRef);
 
-  if (!docRef.exists()) return null;
+  if (!snapshot.exists()) return null;
 
-  return docRef.data();
+  const { id, ...values } = snapshot.data();
+
+  return {
+    id: bookId,
+    ...values,
+  };
 }
 
 export async function getBooksByYear() {
@@ -52,7 +57,7 @@ export async function getBooksByYear() {
   const booksByYear: BookWithYear = {};
 
   bookSnapshots.docs.forEach((snapshot) => {
-    const book = snapshot.data();
+    const { id, ...book } = snapshot.data();
 
     const bookConverted = convertFirestoreData(book);
 
@@ -65,7 +70,10 @@ export async function getBooksByYear() {
         booksByYear[year] = [];
       }
 
-      booksByYear[year].push(book);
+      booksByYear[year].push({
+        id: snapshot.id,
+        ...book,
+      });
     }
   });
 
@@ -81,9 +89,13 @@ export async function getBooksWithoutYear() {
   const bookWithoutYear: Book[] = [];
 
   bookSnapshots.docs.forEach((snapshot) => {
-    const book = snapshot.data();
+    const { id, ...book } = snapshot.data();
 
-    if (!book?.publicationYear) bookWithoutYear.push(book);
+    if (!book?.publicationYear)
+      bookWithoutYear.push({
+        id: snapshot.id,
+        ...book,
+      });
   });
 
   return bookWithoutYear;
