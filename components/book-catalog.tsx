@@ -1,12 +1,12 @@
 import { PlusCircleIcon } from "lucide-react";
 import { Suspense } from "react";
 
+import { AddBookSheet } from "@/components/add-book-sheet";
 import { GroupedBook } from "@/components/grouped-book";
 import { NonGroupedBook } from "@/components/non-grouped-book";
 import { RecommendedBook } from "@/components/recommended-book";
 import { Button } from "@/components/ui/button";
-
-import { AddBookSheet } from "./add-book-sheet";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export function BookCatalog() {
   return (
@@ -20,19 +20,23 @@ export function BookCatalog() {
           </Button>
         </AddBookSheet>
       </div>
-      <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-        <Suspense fallback={<p>Loading recommended book...</p>}>
+      <Suspense fallback={<BookCatalogSkeleton />}>
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
           <RecommendedBook />
-        </Suspense>
-
-        <Suspense fallback={<p>Loading grouped book...</p>}>
           <GroupedBook />
-        </Suspense>
-
-        <Suspense fallback={<p>Loading non grouped book ...</p>}>
           <NonGroupedBook />
-        </Suspense>
-      </div>
+        </div>
+      </Suspense>
+    </div>
+  );
+}
+
+export function BookCatalogSkeleton() {
+  return (
+    <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+      {Array.from({ length: 3 }).map((_, i) => (
+        <Skeleton key={i} className="h-[750px]" />
+      ))}
     </div>
   );
 }
