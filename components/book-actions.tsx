@@ -1,11 +1,11 @@
 "use client";
 
-import { DeleteIcon, Edit2, MoreHorizontal, TrashIcon } from "lucide-react";
+import { Edit2, MoreHorizontal, TrashIcon } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 import { useServerAction } from "zsa-react";
 
-import { deleteBookById } from "@/actions/book";
+import { deleteBookByIdAction } from "@/actions/book";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -13,12 +13,10 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { useIsClient } from "@/hooks/use-is-client";
 import { useUpdateBookStore } from "@/hooks/use-update-book";
 
 interface BookActionsProps {
@@ -26,14 +24,18 @@ interface BookActionsProps {
 }
 
 export function BookActions({ bookId }: BookActionsProps) {
-  const { execute: deleteBook, isPending } = useServerAction(deleteBookById, {
-    onSuccess() {
-      toast.success("Book deleted");
+  const { execute: deleteBook, isPending } = useServerAction(
+    deleteBookByIdAction,
+    {
+      onSuccess() {
+        toast.success("Book deleted");
+      },
+      onError(args) {
+        toast.error(args.err.message);
+      },
     },
-    onError(args) {
-      toast.error(args.err.message);
-    },
-  });
+  );
+  const { onOpen } = useUpdateBookStore();
 
   const onDelete = () => {
     deleteBook({ id: bookId });
@@ -51,9 +53,10 @@ export function BookActions({ bookId }: BookActionsProps) {
           <DropdownMenuGroup>
             <Link
               href={{
-                pathname: bookId,
+                pathname: `/book/${bookId}`,
               }}
               prefetch={false}
+              // onClick={onOpen}
             >
               <DropdownMenuItem>
                 <Edit2 className="mr-2 size-4" />

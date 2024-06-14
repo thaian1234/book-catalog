@@ -15,12 +15,12 @@ export async function GroupedBook() {
     <ScrollArea className="h-[750px]">
       <Card>
         <CardHeader>
-          <CardTitle>Books with Year</CardTitle>
+          <CardTitle>Books With Year</CardTitle>
         </CardHeader>
         <CardContent className="grid">
           {sortedYears.map((year) => (
             <div key={year}>
-              <h3 className="mb-2 font-semibold">{year}</h3>
+              <h3 className="mb-2 text-xl font-semibold">{year}</h3>
               {booksByYear[year].map((book) => (
                 <Book key={book.id} book={book} />
               ))}

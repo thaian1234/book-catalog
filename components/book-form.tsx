@@ -1,12 +1,14 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { useServerAction } from "zsa-react";
 
 import {
   AddBookType,
+  UpdateBookType,
   addBookAction,
   addBookSchema,
   updateBookAction,
@@ -41,23 +43,21 @@ const OPTIONS: Option[] = [
 export function BookForm({ book, mode = "create" }: BookFormProps) {
   const form = useForm<AddBookType>({
     resolver: zodResolver(addBookSchema),
-    defaultValues: {
-      authors: book?.authors,
-      isbn: book?.isbn,
-      name: book?.name,
-      rating: book?.rating,
-    },
+    defaultValues: book,
   });
+  const router = useRouter();
   const { onClose } = useAddBookStore();
 
-  const isCreateMode = mode === "create" && !book;
-
+  const isCreateMode = mode === "create" || !book;
   const successMsg = isCreateMode ? "Book created" : "Book updated";
-  const action = isCreateMode
-    ? addBookAction
-    : updateBookAction.bind(null, {
-        id: book?.id || "",
-      });
+  const action = isCreateMode ? addBookAction : updateBookAction;
+
+  const defaultOptionsValue = book?.authors.map((author) => {
+    return {
+      label: author,
+      value: author,
+    };
+  });
 
   const { execute, isPending } = useServerAction(action, {
     onError(args) {
@@ -70,9 +70,21 @@ export function BookForm({ book, mode = "create" }: BookFormProps) {
     },
   });
 
+  const onSubmit = form.handleSubmit(async (values) => {
+    if (isCreateMode) {
+      await execute(values);
+    } else {
+      await execute({
+        id: book.id,
+        ...values,
+      });
+      router.back();
+    }
+  });
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(execute)} className="space-y-4">
+      <form onSubmit={onSubmit} className="space-y-4">
         <FormField
           control={form.control}
           name="name"
@@ -80,7 +92,7 @@ export function BookForm({ book, mode = "create" }: BookFormProps) {
             <FormItem>
               <FormLabel>Name of the book</FormLabel>
               <FormControl>
-                <Input placeholder="eg. John" {...field} />
+                <Input disabled={isPending} placeholder="eg. John" {...field} />
               </FormControl>
 
               <FormMessage />
@@ -112,7 +124,12 @@ export function BookForm({ book, mode = "create" }: BookFormProps) {
             <FormItem>
               <FormLabel>Rating</FormLabel>
               <FormControl>
-                <Input placeholder="Rating" type="number" {...field} />
+                <Input
+                  disabled={isPending}
+                  placeholder="Rating"
+                  type="number"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -126,7 +143,11 @@ export function BookForm({ book, mode = "create" }: BookFormProps) {
             <FormItem>
               <FormLabel>ISBN</FormLabel>
               <FormControl>
-                <Input placeholder="ISBN code" {...field} />
+                <Input
+                  disabled={isPending}
+                  placeholder="ISBN code"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -142,7 +163,9 @@ export function BookForm({ book, mode = "create" }: BookFormProps) {
               <FormControl>
                 <MultipleSelector
                   defaultOptions={OPTIONS}
+                  value={defaultOptionsValue}
                   placeholder="Select authors..."
+                  creatable
                   emptyIndicator={
                     <p className="text-center text-sm leading-10 text-gray-600 dark:text-gray-400">
                       no results found.
@@ -154,6 +177,7 @@ export function BookForm({ book, mode = "create" }: BookFormProps) {
                     );
                     form.setValue("authors", selectedAuthorIds);
                   }}
+                  disabled={isPending}
                 />
               </FormControl>
               <FormMessage />

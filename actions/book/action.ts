@@ -8,6 +8,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { createServerAction } from "zsa";
 
 import { db } from "@/config/firebase";
@@ -61,7 +62,7 @@ export const updateBookAction = createServerAction()
     revalidatePath("/");
   });
 
-export const deleteBookById = createServerAction()
+export const deleteBookByIdAction = createServerAction()
   .input(deleteBookSchema)
   .handler(async ({ input }) => {
     const validatedFields = deleteBookSchema.safeParse(input);

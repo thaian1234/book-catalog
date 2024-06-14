@@ -7,4 +7,4 @@ export {
   deleteBookSchema,
 } from "./schema";
 
-export { addBookAction, updateBookAction, deleteBookById } from "./action";
+export { addBookAction, updateBookAction, deleteBookByIdAction } from "./action";
