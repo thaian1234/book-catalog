@@ -35,7 +35,6 @@ export function BookActions({ bookId }: BookActionsProps) {
       },
     },
   );
-  const { onOpen } = useUpdateBookStore();
 
   const onDelete = () => {
     deleteBook({ id: bookId });
@@ -56,7 +55,6 @@ export function BookActions({ bookId }: BookActionsProps) {
                 pathname: `/book/${bookId}`,
               }}
               prefetch={false}
-              // onClick={onOpen}
             >
               <DropdownMenuItem>
                 <Edit2 className="mr-2 size-4" />
@@ -64,7 +62,11 @@ export function BookActions({ bookId }: BookActionsProps) {
               </DropdownMenuItem>
             </Link>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-rose-500" onClick={onDelete}>
+            <DropdownMenuItem
+              className="text-rose-500"
+              onClick={onDelete}
+              disabled={isPending}
+            >
               <TrashIcon className="mr-2 size-4" />
               <span>Delete</span>
             </DropdownMenuItem>

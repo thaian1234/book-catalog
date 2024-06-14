@@ -7,7 +7,7 @@ type UpdateBookState = {
 };
 
 export const useUpdateBookStore = create<UpdateBookState>((set) => ({
-  isOpen: true,
+  isOpen: false,
   onOpen() {
     set({ isOpen: true });
   },

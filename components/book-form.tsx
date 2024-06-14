@@ -184,7 +184,7 @@ export function BookForm({ book, mode = "create" }: BookFormProps) {
           )}
         />
 
-        <Button type="submit" disabled={isPending}>
+        <Button type="submit" isPending={isPending}>
           Submit
         </Button>
       </form>

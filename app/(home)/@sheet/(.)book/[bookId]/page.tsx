@@ -1,7 +1,8 @@
-import { getBookById } from "@/services/book-services";
+import { Suspense } from "react";
 
-import { BookForm } from "@/components/book-form";
 import { UpdateBookSheet } from "@/components/update-book-sheet";
+
+import { BookFormData, BookFormDataSpinner } from "./book-form-data";
 
 interface BookModalPageProps {
   params: {
@@ -9,21 +10,14 @@ interface BookModalPageProps {
   };
 }
 
-export default async function BookModalPage({
+export default function BookModalPage({
   params: { bookId },
 }: BookModalPageProps) {
-  const book = await getBookById(bookId);
-
-  if (!book)
-    return (
-      <UpdateBookSheet>
-        <BookForm mode="create" />
-      </UpdateBookSheet>
-    );
-
   return (
     <UpdateBookSheet>
-      <BookForm book={book} mode="update" />
+      <Suspense fallback={<BookFormDataSpinner />}>
+        <BookFormData bookId={bookId} />
+      </Suspense>
     </UpdateBookSheet>
   );
 }
