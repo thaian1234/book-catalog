@@ -17,6 +17,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
+import { useUpdateBookStore } from "@/hooks/use-update-book";
+
 interface BookActionsProps {
   bookId: string;
 }

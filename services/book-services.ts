@@ -22,7 +22,7 @@ const convertFirestoreData = (id: string, data: any): Book => {
     id,
     publicationYear: data?.publicationYear
       ? data?.publicationYear?.toDate()
-      : null, // Chuyển đổi Timestamp thành Date
+      : undefined, // Chuyển đổi Timestamp thành Date
   };
 };
 

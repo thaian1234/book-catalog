@@ -29,36 +29,48 @@ import { Input } from "@/components/ui/input";
 import MultipleSelector, { Option } from "@/components/ui/multiple-selector";
 
 import { useAddBookStore } from "@/hooks/use-add-book";
+import { useUpdateBookStore } from "@/hooks/use-update-book";
 import { type Book } from "@/types";
 
 interface BookFormProps {
-  book?: Book;
+  initialBook?: Book;
   mode: "create" | "update";
 }
 
 const OPTIONS: Option[] = [
-  { label: "nextjs", value: "Nextjs" },
-  { label: "Thai An", value: "Thai An" },
+  { label: " Robert C. Martin", value: " Robert C. Martin" },
+  { label: "Stephen Hawking", value: "Stephen Hawking" },
+  { label: "Jason Schreier", value: "Jason Schreier" },
+  { label: "Martin", value: "Martin" },
+  { label: "Robert", value: "Robert" },
 ];
 
-export function BookForm({ book, mode = "create" }: BookFormProps) {
-  const isCreateMode = mode === "create" || !book;
+export function BookForm({ initialBook, mode = "create" }: BookFormProps) {
+  const isCreateMode = mode === "create" || !initialBook;
   const form = useForm<AddBookType | UpdateBookType>({
     resolver: zodResolver(isCreateMode ? addBookSchema : updateBookSchema),
-    defaultValues: book,
+    defaultValues: initialBook,
   });
   const router = useRouter();
-  const { onClose } = useAddBookStore();
+  const { onClose: onCloseAddBookSheet } = useAddBookStore();
 
   const successMsg = isCreateMode ? "Book created" : "Book updated";
   const action = isCreateMode ? addBookAction : updateBookAction;
 
-  const defaultOptionsValue = book?.authors.map((author) => {
+  const defaultOptionsValue = initialBook?.authors.map((author) => {
     return {
       label: author,
       value: author,
     };
   });
+
+  const handleCloseSheet = () => {
+    if (isCreateMode) {
+      onCloseAddBookSheet();
+    } else {
+      router.back();
+    }
+  };
 
   const { execute: onCreateOrUpdateBook, isPending } = useServerAction(action, {
     onError(args) {
@@ -66,8 +78,8 @@ export function BookForm({ book, mode = "create" }: BookFormProps) {
     },
     onSuccess() {
       toast.success(successMsg);
-      isCreateMode ? onClose() : router.back();
       form.reset();
+      handleCloseSheet();
     },
   });
 

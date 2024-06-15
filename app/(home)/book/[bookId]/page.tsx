@@ -15,5 +15,5 @@ export default async function BookIdPage({
 
   if (!book) return <p>Book not found</p>;
 
-  return <BookForm mode="update" book={book} />;
+  return <BookForm mode="update" initialBook={book} />;
 }

@@ -14,7 +14,7 @@ export async function BookFormData({ bookId }: BookFormDataProps) {
 
   if (!book) notFound();
 
-  return <BookForm mode="update" book={book} />;
+  return <BookForm mode="update" initialBook={book} />;
 }
 
 export function BookFormDataSpinner() {
