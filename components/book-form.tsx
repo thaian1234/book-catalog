@@ -8,9 +8,11 @@ import { useServerAction } from "zsa-react";
 
 import {
   AddBookType,
+  UpdateBookType,
   addBookAction,
   addBookSchema,
   updateBookAction,
+  updateBookSchema,
 } from "@/actions/book";
 
 import { Button } from "@/components/ui/button";
@@ -27,7 +29,7 @@ import { Input } from "@/components/ui/input";
 import MultipleSelector, { Option } from "@/components/ui/multiple-selector";
 
 import { useAddBookStore } from "@/hooks/use-add-book";
-import { Book } from "@/types";
+import { type Book } from "@/types";
 
 interface BookFormProps {
   book?: Book;
@@ -40,14 +42,14 @@ const OPTIONS: Option[] = [
 ];
 
 export function BookForm({ book, mode = "create" }: BookFormProps) {
-  const form = useForm<AddBookType>({
-    resolver: zodResolver(addBookSchema),
+  const isCreateMode = mode === "create" || !book;
+  const form = useForm<AddBookType | UpdateBookType>({
+    resolver: zodResolver(isCreateMode ? addBookSchema : updateBookSchema),
     defaultValues: book,
   });
   const router = useRouter();
   const { onClose } = useAddBookStore();
 
-  const isCreateMode = mode === "create" || !book;
   const successMsg = isCreateMode ? "Book created" : "Book updated";
   const action = isCreateMode ? addBookAction : updateBookAction;
 
@@ -58,32 +60,23 @@ export function BookForm({ book, mode = "create" }: BookFormProps) {
     };
   });
 
-  const { execute, isPending } = useServerAction(action, {
+  const { execute: onCreateOrUpdateBook, isPending } = useServerAction(action, {
     onError(args) {
       toast.error(args.err.message);
     },
     onSuccess() {
       toast.success(successMsg);
-      onClose();
+      isCreateMode ? onClose() : router.back();
       form.reset();
     },
   });
 
-  const onSubmit = form.handleSubmit(async (values) => {
-    if (isCreateMode) {
-      await execute(values);
-    } else {
-      await execute({
-        id: book.id,
-        ...values,
-      });
-      router.back();
-    }
-  });
-
   return (
     <Form {...form}>
-      <form onSubmit={onSubmit} className="space-y-4">
+      <form
+        onSubmit={form.handleSubmit(onCreateOrUpdateBook)}
+        className="space-y-4"
+      >
         <FormField
           control={form.control}
           name="name"
