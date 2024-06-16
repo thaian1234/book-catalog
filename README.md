@@ -50,6 +50,5 @@ This book catalog application is deployed on Vercel! You can access it here: [Bo
 
 3. Run project on port 3000:
    ```bash
-    cd book-catalog
-    bun install
+    bun run dev
    ```
