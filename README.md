@@ -1,36 +1,48 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## Book Catalog
 
-## Getting Started
+This project is a book catalog web application built with a focus on modern technologies and a clean user experience.
 
-First, run the development server:
+### Tech Stack
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Frontend:**
+  - Next.js: Server-side rendering framework for React applications.
+  - React.js: JavaScript library for building user interfaces.
+  - Shadcn-ui: React component library for building user interfaces.
+  - Tailwind CSS: Utility-first CSS framework for rapid styling.
+- **Backend:**
+  - Firebase: Google's cloud-based platform for building mobile and web apps.
+- **State Management:**
+  - Zustand: Lightweight library for managing global application state.
+- **Form Validation:**
+  - react-hook-form: Library for building performant and easy-to-use forms.
+  - Zod: TypeScript-first schema validation library for type safety and error handling.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Features
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- Add, edit, and delete books using server action from your collection.
+- Leverage server-side rendering (SSR) with Next.js for improved SEO and performance.
+- Utilize Firebase for secure and scalable data storage.
+- Implement robust form validation with react-hook-form and Zod for user input.
+- Manage global application state effectively using Zustand.
+- Enjoy a clean user interface built with Shadcn-ui and Tailwind CSS.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+### Running the Application
 
-## Learn More
+1. Clone this repository:
 
-To learn more about Next.js, take a look at the following resources:
+   ```bash
+   git clone [https://github.com/](https://github.com/)thaian1234/book-catalog.git
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+   ```bash
+    cd book-catalog
+    bun install
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+   ```bash
+   bun run dev
+   ```
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+2. Enviroment Variables
+   1. Copy the `.env.example` file to a new file named `.env`.
+   2. Edit the `.env` file and replace the placeholder values with your own configuration details.
