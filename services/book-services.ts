@@ -1,4 +1,5 @@
 import {
+  Timestamp,
   collection,
   doc,
   getDoc,
@@ -15,13 +16,17 @@ import { converter } from "@/lib/converter";
 
 import { Book } from "@/types";
 
-const convertFirestoreData = (id: string, data: any): Book => {
+const convertFirestoreData = (snapshot: any) => {
+  const data = snapshot.data();
+
+  const publicationYear: Date = data?.publicationYear
+    ? data?.publicationYear.toDate()
+    : undefined;
+
   return {
     ...data,
-    id,
-    publicationYear: data?.publicationYear
-      ? data?.publicationYear?.toDate()
-      : undefined, // Chuyển đổi Timestamp thành Date
+    id: snapshot.id,
+    publicationYear,
   };
 };
 
@@ -40,9 +45,7 @@ export async function getBookById(bookId: string) {
 
   if (!snapshot.exists()) return null;
 
-  const { id, ...values } = snapshot.data();
-
-  const bookConverted = convertFirestoreData(snapshot.id, values);
+  const bookConverted = convertFirestoreData(snapshot);
 
   return bookConverted;
 }
@@ -58,11 +61,9 @@ export async function getBooksByYear() {
   const booksByYear: BookWithYear = {};
 
   bookSnapshots.docs.forEach((snapshot) => {
-    const { id, ...book } = snapshot.data();
+    const bookConverted = convertFirestoreData(snapshot);
 
-    const bookConverted = convertFirestoreData(snapshot.id, book);
-
-    const year = book.publicationYear
+    const year = bookConverted?.publicationYear
       ? bookConverted.publicationYear?.getFullYear()
       : null;
 
@@ -87,11 +88,9 @@ export async function getBooksWithoutYear() {
   const bookWithoutYear: Book[] = [];
 
   bookSnapshots.docs.forEach((snapshot) => {
-    const { id, ...book } = snapshot.data();
+    const bookConverted = convertFirestoreData(snapshot);
 
-    const bookConverted = convertFirestoreData(snapshot.id, book);
-
-    if (!book?.publicationYear) {
+    if (!bookConverted?.publicationYear) {
       bookWithoutYear.push(bookConverted);
     }
   });
@@ -117,8 +116,7 @@ export async function getRecommendedBook() {
   if (snapshot.empty) return null;
 
   const topRatedBook = snapshot.docs.map((doc) => {
-    const { id, ...book } = doc.data();
-    const bookConverted = convertFirestoreData(doc.id, book);
+    const bookConverted = convertFirestoreData(doc);
 
     return bookConverted;
   });
