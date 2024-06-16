@@ -1,5 +1,4 @@
 import {
-  Timestamp,
   collection,
   doc,
   getDoc,
@@ -108,7 +107,7 @@ export async function getRecommendedBook() {
 
   const q = query(
     bookRef,
-    where("publicationYear", ">=", Timestamp.fromDate(threeYearsAgo)),
+    where("publicationYear", ">=", threeYearsAgo),
     orderBy("rating", "desc"),
     limit(1),
   );
