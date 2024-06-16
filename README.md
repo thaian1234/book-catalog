@@ -2,6 +2,10 @@
 
 This project is a book catalog web application built with a focus on modern technologies and a clean user experience.
 
+## Deployment
+
+This book catalog application is deployed on Vercel! You can access it here: [Book Catalog](https://book-catalog-taupe.vercel.app/)
+
 ### Tech Stack
 
 - **Frontend:**
@@ -31,7 +35,7 @@ This project is a book catalog web application built with a focus on modern tech
 1. Clone this repository:
 
    ```bash
-   git clone [https://github.com/](https://github.com/)thaian1234/book-catalog.git
+   git clone [https://github.com/thaian1234/book-catalog.git](https://github.com/thaian1234/book-catalog.git)
    ```
 
    ```bash
@@ -44,5 +48,5 @@ This project is a book catalog web application built with a focus on modern tech
    ```
 
 2. Enviroment Variables
-   1. Copy the `.env.example` file to a new file named `.env`.
-   2. Edit the `.env` file and replace the placeholder values with your own configuration details.
+   - Copy the `.env.example` file to a new file named `.env`.
+   - Edit the `.env` file and replace the placeholder values with your own configuration details.
