@@ -35,7 +35,7 @@ This book catalog application is deployed on Vercel! You can access it here: [Bo
 1. Clone this repository:
 
    ```bash
-   git clone [https://github.com/thaian1234/book-catalog.git](https://github.com/thaian1234/book-catalog.git)
+   git clone https://github.com/thaian1234/book-catalog.git
    ```
 
    ```bash
@@ -43,10 +43,13 @@ This book catalog application is deployed on Vercel! You can access it here: [Bo
     bun install
    ```
 
-   ```bash
-   bun run dev
-   ```
-
 2. Enviroment Variables
+
    - Copy the `.env.example` file to a new file named `.env`.
    - Edit the `.env` file and replace the placeholder values with your own configuration details.
+
+3. Run project on port 3000:
+   ```bash
+    cd book-catalog
+    bun install
+   ```
