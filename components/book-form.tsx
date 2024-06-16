@@ -47,15 +47,16 @@ const OPTIONS: Option[] = [
 
 export function BookForm({ initialBook, mode = "create" }: BookFormProps) {
   const isCreateMode = mode === "create" || !initialBook;
+  const successMsg = isCreateMode ? "Book created" : "Book updated";
+  const actionSchema = isCreateMode ? addBookSchema : updateBookSchema;
+  const action = isCreateMode ? addBookAction : updateBookAction;
+
   const form = useForm<AddBookType | UpdateBookType>({
-    resolver: zodResolver(isCreateMode ? addBookSchema : updateBookSchema),
+    resolver: zodResolver(actionSchema),
     defaultValues: initialBook,
   });
   const router = useRouter();
   const { onClose: onCloseAddBookSheet } = useAddBookStore();
-
-  const successMsg = isCreateMode ? "Book created" : "Book updated";
-  const action = isCreateMode ? addBookAction : updateBookAction;
 
   const defaultOptionsValue = initialBook?.authors.map((author) => {
     return {

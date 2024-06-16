@@ -35,12 +35,12 @@ This book catalog application is deployed on Vercel! You can access it here: [Bo
 1. Clone this repository:
 
    ```bash
-   	git clone https://github.com/thaian1234/book-catalog.git
+   git clone https://github.com/thaian1234/book-catalog.git
    ```
 
    ```bash
-   	cd book-catalog
-    bun install
+   cd book-catalog
+   bun install
    ```
 
 2. Enviroment Variables
@@ -50,5 +50,5 @@ This book catalog application is deployed on Vercel! You can access it here: [Bo
 
 3. Run project on port 3000:
    ```bash
-    bun run dev
+   bun run dev
    ```
