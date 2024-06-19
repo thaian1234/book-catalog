@@ -14,7 +14,7 @@ export const bookSchema = z.object({
     .min(new Date("01-01-1800"), {
       message: "Date must be greater than or equal to Jan 01 1800",
     })
-    .optional(),
+    .nullable(),
   rating: z.coerce.number().gte(0).lte(10).default(0),
   isbn: z
     .string()

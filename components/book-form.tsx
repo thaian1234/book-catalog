@@ -29,7 +29,6 @@ import { Input } from "@/components/ui/input";
 import MultipleSelector, { Option } from "@/components/ui/multiple-selector";
 
 import { useAddBookStore } from "@/hooks/use-add-book";
-import { useUpdateBookStore } from "@/hooks/use-update-book";
 import { type Book } from "@/types";
 
 interface BookFormProps {
@@ -50,14 +49,7 @@ export function BookForm({ initialBook, mode = "create" }: BookFormProps) {
   const successMsg = isCreateMode ? "Book created" : "Book updated";
   const actionSchema = isCreateMode ? addBookSchema : updateBookSchema;
   const action = isCreateMode ? addBookAction : updateBookAction;
-
-  const form = useForm<AddBookType | UpdateBookType>({
-    resolver: zodResolver(actionSchema),
-    defaultValues: initialBook,
-  });
-  const router = useRouter();
-  const { onClose: onCloseAddBookSheet } = useAddBookStore();
-
+  const publicationYear = isCreateMode ? null : initialBook.publicationYear;
   const defaultOptionsValue = initialBook?.authors.map((author) => {
     return {
       label: author,
@@ -65,13 +57,16 @@ export function BookForm({ initialBook, mode = "create" }: BookFormProps) {
     };
   });
 
-  const handleCloseSheet = () => {
-    if (isCreateMode) {
-      onCloseAddBookSheet();
-    } else {
-      router.back();
-    }
-  };
+  const form = useForm<AddBookType | UpdateBookType>({
+    resolver: zodResolver(actionSchema),
+    mode: "onChange",
+    defaultValues: {
+      ...initialBook,
+      publicationYear,
+    },
+  });
+  const router = useRouter();
+  const { onClose: onCloseAddBookSheet } = useAddBookStore();
 
   const { execute: onCreateOrUpdateBook, isPending } = useServerAction(action, {
     onError(args) {
@@ -83,6 +78,14 @@ export function BookForm({ initialBook, mode = "create" }: BookFormProps) {
       handleCloseSheet();
     },
   });
+
+  const handleCloseSheet = () => {
+    if (isCreateMode) {
+      onCloseAddBookSheet();
+    } else {
+      router.back();
+    }
+  };
 
   return (
     <Form {...form}>
@@ -114,6 +117,7 @@ export function BookForm({ initialBook, mode = "create" }: BookFormProps) {
                 <DateTimePicker
                   jsDate={field.value}
                   onJsDateChange={field.onChange}
+                  showClearButton={false}
                 />
               </FormControl>
 

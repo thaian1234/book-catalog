@@ -21,7 +21,7 @@ const convertFirestoreData = (snapshot: any) => {
 
   const publicationYear: Date = data?.publicationYear
     ? data?.publicationYear.toDate()
-    : undefined;
+    : null;
 
   return {
     ...data,
