@@ -106,21 +106,33 @@ export async function getRecommendedBook() {
 
   const q = query(
     bookRef,
-    where("publicationYear", ">=", threeYearsAgo),
+    where("publicationYear", "<=", threeYearsAgo),
+    orderBy("publicationYear", "desc"),
     orderBy("rating", "desc"),
-    limit(1),
   );
 
-  const snapshot = await getDocs(q);
+  type BookWithYear = Record<string, Book>;
+  const bookSnapshots = await getDocs(q);
 
-  if (snapshot.empty) return null;
+  const recommendedBook: BookWithYear = {};
 
-  const topRatedBook = snapshot.docs.map((doc) => {
-    const bookConverted = convertFirestoreData(doc);
+  bookSnapshots.docs.forEach((snapshot) => {
+    const bookConverted = convertFirestoreData(snapshot);
 
-    return bookConverted;
+    const year = bookConverted?.publicationYear
+      ? bookConverted.publicationYear?.getFullYear()
+      : null;
+
+    if (year) {
+      if (!recommendedBook[year]) {
+        recommendedBook[year] = bookConverted;
+      } else if (bookConverted.rating === recommendedBook[year].rating) {
+        const randomChoice =
+          Math.random() < 0.5 ? bookConverted : recommendedBook[year];
+        recommendedBook[year] = randomChoice;
+      }
+    }
   });
-  const randomIndex = Math.floor(Math.random() * topRatedBook.length);
 
-  return topRatedBook[randomIndex];
+  return recommendedBook;
 }

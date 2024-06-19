@@ -1,26 +1,38 @@
 import { getRecommendedBook } from "@/services/book-services";
 
+import { Book } from "@/components/book";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
-import { Book } from "./book";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export async function RecommendedBook() {
   const recommendedBook = await getRecommendedBook();
 
+  const sortedYears = Object.keys(recommendedBook).sort(
+    (a, b) => parseInt(b) - parseInt(a),
+  );
+
+  const noRecommendedBook = sortedYears.length === 0;
+
   return (
-    <div>
+    <ScrollArea className="h-[750px]">
       <Card>
         <CardHeader>
-          <CardTitle>Recommended Book</CardTitle>
+          <CardTitle>Recommended Books</CardTitle>
         </CardHeader>
-        <CardContent className="grid gap-4">
-          {recommendedBook ? (
-            <Book book={recommendedBook} />
-          ) : (
-            <p>No recommended book</p>
-          )}
+        <CardContent className="grid">
+          {noRecommendedBook && <p>No recommended book</p>}
+
+          {sortedYears.map((year) => (
+            <div key={year}>
+              <h3 className="mb-2 text-xl font-semibold">{year}</h3>
+              <Book
+                key={recommendedBook[year].id}
+                book={recommendedBook[year]}
+              />
+            </div>
+          ))}
         </CardContent>
       </Card>
-    </div>
+    </ScrollArea>
   );
 }
