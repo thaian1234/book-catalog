@@ -27,7 +27,7 @@ const convertFirestoreData = (snapshot: any) => {
     ...data,
     id: snapshot.id,
     publicationYear,
-  };
+  } as Book;
 };
 
 export async function getAllBooks() {
